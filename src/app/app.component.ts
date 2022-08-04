@@ -11,6 +11,6 @@ export class AppComponent {
   title = 'jwt-auth-demo';
   userState$: Observable<Boolean>;
   constructor(private auth: AuthService) {
-    this.userState$ = auth.isUserLoggedIn;
+    this.userState$ = this.auth.isUserLoggedIn;
   }
 }
