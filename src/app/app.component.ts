@@ -8,9 +8,8 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'jwt-auth-demo';
-  userState$: Observable<Boolean>;
+  userState$: Observable<boolean>;
   constructor(private auth: AuthService) {
-    this.userState$ = this.auth.isUserLoggedIn;
+    this.userState$ = this.auth.LoggedInUser;
   }
 }

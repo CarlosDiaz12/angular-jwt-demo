@@ -8,13 +8,16 @@ import { TokenStorageService } from './token-storage.service';
   providedIn: 'root',
 })
 export class AuthService {
-  isUserLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
+  public isUserLoggedIn: BehaviorSubject<boolean>;
+  public LoggedInUser: Observable<boolean>;
   constructor(
     private httpClient: HttpClient,
     private tokenStorage: TokenStorageService
-  ) {}
+  ) {
+    const state = this.getUserToken() != null;
+    this.isUserLoggedIn = new BehaviorSubject<boolean>(state);
+    this.LoggedInUser = this.isUserLoggedIn.asObservable();
+  }
 
   setUserState(isLoggedIn: boolean, token: string | null = null) {
     console.log('SETTING USER STATE');
@@ -38,5 +41,9 @@ export class AuthService {
 
   getUserToken(): string | null {
     return this.tokenStorage.getToken();
+  }
+
+  public get LoggedInUserValue() {
+    return this.isUserLoggedIn.value;
   }
 }
