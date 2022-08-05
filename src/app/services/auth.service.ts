@@ -47,9 +47,15 @@ export class AuthService {
   }
 
   refreshAccessToken(refreshToken: string | null): Observable<any> {
-    return this.httpClient.post(environment.baseUrl + '/auth/refresh-token', {
-      refreshToken
-    });
+    return this.httpClient.post(
+      environment.baseUrl + '/auth/refresh-token',
+      {
+        refreshToken,
+      },
+      {
+        headers: { Authorization: 'Bearer ' + this.getUserToken() },
+      }
+    );
   }
   getTokenLogin(username: string, password: string): Observable<any> {
     this.logOut();
