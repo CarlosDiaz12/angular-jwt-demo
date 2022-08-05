@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const isLoggedIn = this.auth.isUserLoggedIn.getValue();
+    const isLoggedIn = this.auth.LoggedInUserValue;
     console.log('EXECUTING INTERCEPTOR');
     if (isLoggedIn) {
       const token = this.auth.getUserToken();
