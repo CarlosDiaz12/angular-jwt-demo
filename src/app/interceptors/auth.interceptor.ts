@@ -45,13 +45,14 @@ export class AuthInterceptor implements HttpInterceptor {
         // So we verify url and we throw an error if it's the case
         if (
           request.url.includes('refresh-token') ||
-          request.url.includes('login')
+          request.url.includes('token')
         ) {
           // We do another check to see if refresh token failed
           // In this case we want to logout user and to redirect it to login page
 
           if (request.url.includes('refresh-token')) {
             this.auth.logOut();
+            // redirect to login
           }
 
           return throwError(() => error);
@@ -89,7 +90,6 @@ export class AuthInterceptor implements HttpInterceptor {
             }),
             catchError((error) => {
               this.refreshTokenInProgress = false;
-
               this.auth.logOut();
               return throwError(() => error);
             })
