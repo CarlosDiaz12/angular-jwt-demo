@@ -24,28 +24,33 @@ export class AuthService {
         const token = this.getUserToken();
         let result = false;
         if (token) {
-          console.log(
-            'IS TOKEN EXPIRED ',
-            this.jwthelper.isTokenExpired(token)
-          );
           result = !this.jwthelper.isTokenExpired(token);
           this.isUserLoggedIn.next(result);
+        } else {
+          this.logOut();
         }
-        this.logOut();
         return result;
       })
     );
   }
 
-  setUserState(isLoggedIn: boolean, token: string | null = null) {
-    console.log('SETTING USER STATE');
-    if (token) {
-      console.log('SAVING TOKEN');
+  setUserState(
+    isLoggedIn: boolean,
+    token: string | null = null,
+    refreshToken: string | null = null
+  ) {
+    if (token && refreshToken) {
       this.tokenStorage.saveToken(token);
+      this.tokenStorage.saveRefreshToken(refreshToken);
     }
     this.isUserLoggedIn.next(isLoggedIn);
   }
 
+  refreshAccessToken(refreshToken: string | null): Observable<any> {
+    return this.httpClient.post(environment.baseUrl + '/auth/refresh-token', {
+      refreshToken
+    });
+  }
   getTokenLogin(username: string, password: string): Observable<any> {
     this.logOut();
     return this.httpClient.post(environment.baseUrl + '/auth/token', {
@@ -57,10 +62,15 @@ export class AuthService {
   logOut(): void {
     this.isUserLoggedIn.next(false);
     this.tokenStorage.clearToken();
+    this.tokenStorage.clearRefreshToken();
   }
 
   getUserToken(): string | null {
     return this.tokenStorage.getToken();
+  }
+
+  getUserRefreshToken(): string | null {
+    return this.tokenStorage.getRefreshToken();
   }
 
   public get LoggedInUserValue() {

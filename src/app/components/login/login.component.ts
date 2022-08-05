@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
     this.auth.getTokenLogin('karlus', '123456').subscribe({
       next: (data) => {
         console.log(data);
-        this.auth.setUserState(true, data.token);
+        this.auth.setUserState(true, data.token, data.refreshToken);
         this.router.navigateByUrl('', { replaceUrl: true });
       },
       error: (error) => console.log(error),
